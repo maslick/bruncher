@@ -1,0 +1,44 @@
+language: java
+install: true
+sudo: false
+
+jdk:
+  - openjdk11
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+before_install:
+  - chmod +x gradlew
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+stages:
+  - name: pull-request
+    if: type == pull_request
+  - name: snapshot
+    if: branch == develop AND type == push
+  - name: release
+    if: branch == master AND type == push
+
+jobs:
+  include:
+    - stage: pull-request
+      name: "Pull request"
+
+
+    - stage: snapshot
+      name: "Snapshot branch"
+      script:
+        - ./gradlew clean snapshot publishToMavenLocal
+        - ls -la build/libs
+
+    - stage: release
+      name: "Master branch"
+      script:
+        - ./gradlew clean final publishToMavenLocal
+        - ls -la build/libs
