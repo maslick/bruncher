@@ -18,23 +18,25 @@ cache:
     - $HOME/.gradle/wrapper/
 
 stages:
-  - name: pull-request
-    if: type == pull_request
   - name: snapshot
     if: branch == develop AND type == push
+  - name: candidate
+    if: branch =~ ^release\/.*$
   - name: release
     if: branch == master AND type == push
 
 jobs:
   include:
-    - stage: pull-request
-      name: "Pull request"
-      script: skip
-
     - stage: snapshot
       name: "Snapshot branch"
       script:
         - ./gradlew clean snapshot publishToMavenLocal
+        - ls -la build/libs
+
+    - stage: candidate
+      name: "Release candidate"
+      script:
+        - ./gradlew clean candidate publishToMavenLocal
         - ls -la build/libs
 
     - stage: release
