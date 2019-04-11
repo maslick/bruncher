@@ -18,17 +18,23 @@ cache:
     - $HOME/.gradle/wrapper/
 
 stages:
+  - name: pr
+    if: type == pull_request
   - name: snapshot
     if: branch == develop AND type == push
   - name: candidate
-    if: branch =~ ^release\/.*$
+    if: branch =~ ^release\/.*$ AND type == push
   - name: release
     if: branch == master AND type == push
-  - name: tag
-    if: tag =~ ^v.*$
 
 jobs:
   include:
+    - stage: pr
+      name: "Pull request"
+      script:
+        - ./gradlew build test
+        - ls -la build/libs
+
     - stage: snapshot
       name: "Snapshot branch"
       script:
@@ -45,10 +51,4 @@ jobs:
       name: "Release"
       script:
         - ./gradlew publishToMavenLocal final
-        - ls -la build/libs
-
-    - stage: tag
-      name: "Tag"
-      script:
-        - ./gradlew -Prelease.useLastTag=true publishToMavenLocal final
         - ls -la build/libs
