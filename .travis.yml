@@ -34,6 +34,7 @@ jobs:
       script:
         - ./gradlew build test
         - ls -la build/libs
+
     - stage: snapshot
       name: "Snapshot branch"
       script:
