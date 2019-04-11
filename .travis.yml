@@ -38,17 +38,17 @@ jobs:
     - stage: snapshot
       name: "Snapshot branch"
       script:
-        - ./gradlew publishToMavenLocal snapshot
+        - ./gradlew snapshot
         - ls -la build/libs
 
     - stage: candidate
       name: "Release candidate"
       script:
-        - ./gradlew publishToMavenLocal candidate
+        - ./gradlew candidate
         - ls -la build/libs
 
     - stage: release
       name: "Release"
       script:
-        - ./gradlew publishToMavenLocal final
+        - ./gradlew final
         - ls -la build/libs
