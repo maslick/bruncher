@@ -24,8 +24,6 @@ stages:
     if: branch =~ ^release\/.*$
   - name: release
     if: branch == master AND type == push
-  - name: tag
-    if: tag =~ ^v.*$
 
 jobs:
   include:
@@ -45,10 +43,4 @@ jobs:
       name: "Release"
       script:
         - ./gradlew publishToMavenLocal final
-        - ls -la build/libs
-
-    - stage: tag
-      name: "Tag"
-      script:
-        - ./gradlew -Prelease.useLastTag=true publishToMavenLocal final
         - ls -la build/libs
