@@ -42,5 +42,5 @@ jobs:
     - stage: release
       name: "Master branch"
       script:
-        - ./gradlew clean final publishToMavenLocal
+        - ./gradlew clean final publishToMavenLocal -Prelease.useLastTag=true
         - ls -la build/libs
