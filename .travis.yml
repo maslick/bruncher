@@ -18,6 +18,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 stages:
+  - name: pr
+    if: type == pull_request
   - name: snapshot
     if: branch == develop AND type == push
   - name: candidate
@@ -27,6 +29,11 @@ stages:
 
 jobs:
   include:
+    - stage: pr
+      name: "Pull request"
+      script:
+        - ./gradlew build test
+        - ls -la build/libs
     - stage: snapshot
       name: "Snapshot branch"
       script:
