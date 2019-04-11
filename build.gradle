@@ -23,3 +23,7 @@ dependencies {
 nebulaRelease {
     addReleaseBranchPattern "develop"
 }
+
+tasks.findByName("snapshot").dependsOn publishToMavenLocal
+tasks.findByName("candidate").dependsOn publishToMavenLocal
+tasks.findByName("final").dependsOn publishToMavenLocal
