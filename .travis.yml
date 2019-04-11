@@ -24,23 +24,31 @@ stages:
     if: branch =~ ^release\/.*$
   - name: release
     if: branch == master AND type == push
+  - name: tag
+    if: (tag =~ ^v) AND (branch = master)
 
 jobs:
   include:
     - stage: snapshot
       name: "Snapshot branch"
       script:
-        - ./gradlew clean snapshot publishToMavenLocal
+        - ./gradlew publishToMavenLocal snapshot
         - ls -la build/libs
 
     - stage: candidate
       name: "Release candidate"
       script:
-        - ./gradlew clean candidate publishToMavenLocal
+        - ./gradlew publishToMavenLocal candidate
         - ls -la build/libs
 
     - stage: release
-      name: "Master branch"
+      name: "Release"
       script:
-        - ./gradlew clean final publishToMavenLocal -Prelease.useLastTag=true
+        - ./gradlew publishToMavenLocal final
+        - ls -la build/libs
+
+    - stage: tag
+      name: "Tag"
+      script:
+        - ./gradlew -Prelease.useLastTag=true publishToMavenLocal final
         - ls -la build/libs
