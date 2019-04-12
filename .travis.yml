@@ -26,6 +26,8 @@ stages:
     if: branch =~ ^release.*$ AND type == push
   - name: release
     if: branch == master AND type == push
+  - name: hotfix
+    if: branch =~ ^hotfix.*$ AND type == push
 
 jobs:
   include:
@@ -51,4 +53,10 @@ jobs:
       name: "Release"
       script:
         - ./gradlew final
+        - ls -la build/libs
+
+    - stage: hotfix
+      name: "Hotfix"
+      script:
+        - ./gradlew candidate -Prelease.scope=patch
         - ls -la build/libs
