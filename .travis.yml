@@ -25,7 +25,7 @@ stages:
   - name: candidate
     if: branch =~ ^release.*$ AND type == push
   - name: release
-    if: branch == master AND type == push
+    if: branch == master AND type == tag
   - name: hotfix
     if: branch =~ ^hotfix.*$ AND type == push
 
@@ -50,9 +50,9 @@ jobs:
         - ls -la build/libs
 
     - stage: release
-      name: "Release"
+      name: "Release on manual tag"
       script:
-        - ./gradlew final
+        - ./gradlew final -Prelease.useLastTag=true
         - ls -la build/libs
 
     - stage: hotfix
