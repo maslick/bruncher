@@ -25,7 +25,7 @@ stages:
   - name: candidate
     if: branch =~ ^release.*$ AND type == push
   - name: release
-    if: type == tag
+    if: tag IS present
   - name: hotfix
     if: branch =~ ^hotfix.*$ AND type == push
 
